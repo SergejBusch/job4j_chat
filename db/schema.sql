@@ -1,0 +1,46 @@
+CREATE TABLE IF NOT EXISTS messages
+(
+    id SERIAL PRIMARY KEY,
+    msg VARCHAR NOT NULL,
+    created TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    person_id INT NOT NULL,
+    room_id INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS person
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL UNIQUE,
+    password VARCHAR NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS role
+(
+    id SERIAL PRIMARY KEY,
+    role_name VARCHAR NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS room
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS person_role
+(
+    person_id INT REFERENCES person(id),
+    role_id INT REFERENCES role(id)
+);
+
+CREATE TABLE IF NOT EXISTS room_person
+(
+    room_id INT REFERENCES room(id),
+    person_id INT REFERENCES person(id)
+);
+
+
+ALTER TABLE messages
+    ADD CONSTRAINT FK_MESSAGE_PERSON FOREIGN KEY (person_id) REFERENCES person(id);
+
+ALTER TABLE messages
+    ADD CONSTRAINT FK_MESSAGE_ON_ROOM FOREIGN KEY (room_id) REFERENCES room(id);
