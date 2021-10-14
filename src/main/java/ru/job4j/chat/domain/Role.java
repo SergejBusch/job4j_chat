@@ -1,5 +1,6 @@
 package ru.job4j.chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,7 @@ public class Role {
     @NotNull
     private String roleName;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles", cascade = CascadeType.ALL)
     private Set<Person>  persons = new HashSet<>();
 

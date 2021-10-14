@@ -1,5 +1,6 @@
 package ru.job4j.chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,18 +24,21 @@ public class Person {
     @NotNull
     private String password;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "room_person",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "room_id"))
     private Set<Room> rooms = new HashSet<>();
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<Message> message = new ArrayList<>();
 
@@ -75,9 +79,6 @@ public class Person {
         return "Person{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", rooms=" + rooms +
-                ", roles=" + roles +
                 '}';
     }
 }

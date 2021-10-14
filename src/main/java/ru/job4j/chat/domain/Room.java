@@ -1,5 +1,6 @@
 package ru.job4j.chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,9 +20,11 @@ public class Room {
     @NotNull
     private String name;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "rooms", cascade = CascadeType.ALL)
     private Set<Person> persons = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<Message> messages = new ArrayList<>();
 
