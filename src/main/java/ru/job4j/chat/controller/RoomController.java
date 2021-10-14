@@ -36,6 +36,10 @@ public class RoomController {
 
     @PostMapping("/")
     public ResponseEntity<Room> create(@RequestBody Room room) {
+        var name = room.getName();
+        if (name == null) {
+            throw new NullPointerException("Room name mustn't be empty");
+        }
         if (repository.findByName(room.getName()).isEmpty()) {
             return new ResponseEntity<>(
                     repository.save(room),

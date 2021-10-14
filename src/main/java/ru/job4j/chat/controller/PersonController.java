@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.chat.domain.Person;
 import ru.job4j.chat.repository.PersonRepository;
 
@@ -34,12 +35,20 @@ public class PersonController {
     public ResponseEntity<Person> getById(@PathVariable int id) {
         var person = repository.findById(id);
         return new ResponseEntity<>(
-                repository.findById(id).orElse(new Person()),
-                person.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+                repository.findById(id)
+                        .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not exist"
+                )),
+                HttpStatus.OK);
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Person> signUp(@RequestBody Person person) {
+        var username = person.getName();
+        var password = person.getPassword();
+        if (username == null || password == null) {
+            throw new NullPointerException("Username and password mustn't be empty");
+        }
         person.setPassword(encoder.encode(person.getPassword()));
         repository.save(person);
         return new ResponseEntity<>(HttpStatus.OK);
